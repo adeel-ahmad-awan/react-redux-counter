@@ -1,11 +1,11 @@
 // import { createStore } from "redux";
 import { createSlice, configureStore } from "@reduxjs/toolkit";
 
-const initialState = { counter: 0, showCounter: true };
+const initialCounterState = { counter: 0, showCounter: true };
 
 const counterSlice = createSlice({
   name: "counter",
-  initialState: initialState,
+  initialState: initialCounterState,
   reducers: {
     increment(state) {
       // this will internally create new state. If we have code like this.
@@ -23,6 +23,33 @@ const counterSlice = createSlice({
     },
   },
 });
+
+const initialAuthState = { isAuthenticated: false };
+
+const authSlice = createSlice({
+  name: "authentication",
+  initialState: initialAuthState,
+  reducers: {
+    login(state) {
+      state.isAuthenticated = true;
+    },
+    logout(state) {
+      state.isAuthenticated = false;
+    },
+  },
+});
+
+const store = configureStore({
+  // we can add multiple reducer and it will merged as one behind the scenes.
+  reducer: {
+    counter: counterSlice.reducer,
+    auth: authSlice.reducer,
+  },
+});
+
+export const counterActions = counterSlice.actions;
+export const authActions = authSlice.actions;
+export default store;
 
 // const counterReducer = (state = initialState, action) => {
 //   if (action.type === "inc") {
@@ -53,16 +80,3 @@ const counterSlice = createSlice({
 
 //   return state;
 // };
-
-const store = configureStore({
-  // we can add multiple reducer and it will merged as one behind the scenes.
-  // reducer: {
-  //   counter: counterSlice.reducer,
-  // },
-
-  // since we have one reducer. we will add it as the following.
-  reducer: counterSlice.reducer,
-});
-
-export const counterActions = counterSlice.actions;
-export default store;
